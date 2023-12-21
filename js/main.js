@@ -3,7 +3,7 @@ const PLAYFIELD_COLUMNS = 10;
 const PLAYFIELD_ROWS = 20;
 
 // Figures
-const TETROMINO_NAMES = ["O", "L"];
+const TETROMINO_NAMES = ["O", "L", "J", "I", "S", "Z", "T"];
 
 const TETROMINOES = {
   O: [
@@ -13,6 +13,37 @@ const TETROMINOES = {
 
   L: [
     [0, 0, 1],
+    [1, 1, 1],
+    [0, 0, 0],
+  ],
+
+  J: [
+    [1, 0, 0],
+    [1, 1, 1],
+    [0, 0, 0],
+  ],
+
+  I: [
+    [0, 0, 0, 0],
+    [1, 1, 1, 1],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+  ],
+
+  S: [
+    [0, 1, 1],
+    [1, 1, 0],
+    [0, 0, 0],
+  ],
+
+  Z: [
+    [1, 1, 0],
+    [0, 1, 1],
+    [0, 0, 0],
+  ],
+
+  T: [
+    [0, 1, 0],
     [1, 1, 1],
     [0, 0, 0],
   ],
@@ -36,10 +67,11 @@ function generatePlayField() {
 
 // Create figure
 function generateTetromino() {
-  const nameTetro = TETROMINO_NAMES[Math.round(Math.random())];
+  let figure = Math.floor(Math.random() * TETROMINO_NAMES.length);
+  const nameTetro = TETROMINO_NAMES[figure];
   const matrixTetro = TETROMINOES[nameTetro];
-  const columnTetro = 5;
-  const rowTetro = 3;
+  const columnTetro = 4;
+  const rowTetro = 0;
 
   tetromino = {
     name: nameTetro,

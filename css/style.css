@@ -23,21 +23,37 @@ body {
 .tetris div {
   height: min(4vh, 7vw);
   width: min(4vh, 7vw);
-  background-color: rgb(21, 21, 127);
+  background-color: rgb(10, 10, 67);
   border-radius: 0.3vh;
   box-shadow: inset 2px 2px 2px rgba(113, 112, 112, 0.291);
 }
 
-
 div.O,
-div.L{
-    box-shadow: inset 2px 2px 2px rgba(0, 0, 0, 0.372);
+div.L {
+  box-shadow: inset 2px 2px 2px rgba(0, 0, 0, 0.372);
 }
 
 .tetris .O {
-  background-color: brown;
+  background-color: rgba(255, 255, 0, 0.818);
 }
 
 .tetris .L {
-  background-color: orange;
+  background-color: rgba(255, 128, 0, 0.818);
+}
+
+.tetris .J {
+  background-color: rgba(0, 0, 255, 0.818);
+}
+
+.tetris .I {
+  background-color: rgba(0, 255, 255, 0.818);
+}
+.tetris .S {
+  background-color: rgba(0, 255, 0, 0.818);
+}
+.tetris .Z {
+  background-color: rgba(255, 0, 0, 0.818);
+}
+.tetris .T {
+  background-color: rgba(128, 0, 128, 0.818);
 }
