@@ -70,7 +70,8 @@ function generateTetromino() {
   let figure = Math.floor(Math.random() * TETROMINO_NAMES.length);
   const nameTetro = TETROMINO_NAMES[figure];
   const matrixTetro = TETROMINOES[nameTetro];
-  const columnTetro = 4;
+  const columnTetro =
+    PLAYFIELD_COLUMNS / 2 - Math.floor(matrixTetro.length / 2);
   const rowTetro = 0;
 
   tetromino = {
