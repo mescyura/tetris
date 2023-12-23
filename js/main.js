@@ -1,3 +1,9 @@
+// ДЗ №2
+// done 1. Поставити const rowTetro = -2; прописати код щоб працювало коректно
+// done 2. Зверстати поле для розрахунку балів гри
+// done 3. Прописати логіку і код розрахунку балів гри (1 ряд = 10; 2 ряди = 30; 3 ряди = 50; 4 = 100)
+// done 4. Реалізувати самостійний рух фігур до низу
+
 // Width and height
 const PLAYFIELD_COLUMNS = 10;
 const PLAYFIELD_ROWS = 20;
@@ -52,6 +58,12 @@ const TETROMINOES = {
 // Field and figure
 let playfield;
 let tetromino;
+// Score
+let score = 0;
+
+// 
+let timeOutId;
+let requestId;
 
 // Create field
 function generatePlayField() {
@@ -72,7 +84,8 @@ function generateTetromino() {
 	const matrixTetro = TETROMINOES[nameTetro];
 	const columnTetro =
 		PLAYFIELD_COLUMNS / 2 - Math.floor(matrixTetro.length / 2);
-	const rowTetro = 0;
+	//ДЗ №2 1
+	const rowTetro = -2;
 
 	tetromino = {
 		name: nameTetro,
@@ -119,6 +132,10 @@ function drawTetromino() {
 			if (tetromino.matrix[row][column] == 0) {
 				continue;
 			}
+			//ДЗ №2 1
+			if (tetromino.row + row < 0) {
+				continue;
+			}
 			const cellIndex = convertPositionToIndex(
 				tetromino.row + row,
 				tetromino.column + column
@@ -128,7 +145,7 @@ function drawTetromino() {
 	}
 }
 
-drawTetromino();
+moveTetrominoDown();
 
 // Draw the new position for the figure
 function draw() {
@@ -161,6 +178,8 @@ function removeFilledRows(filledRows) {
 	filledRows.forEach(row => {
 		dropRowsAbove(row);
 	});
+	//ДЗ №2 2-3
+	scoreCount(filledRows.length);
 }
 
 function dropRowsAbove(rowToDelete) {
@@ -188,6 +207,17 @@ function findFilledRows() {
 	return filledRows;
 }
 
+//ДЗ №2 2-3
+// Contn score
+function scoreCount(filledRows) {
+	if (filledRows > 0) {
+		points =
+			filledRows == 1 ? 10 : filledRows == 2 ? 30 : filledRows == 3 ? 50 : 100;
+		score += points;
+		document.getElementById('score').innerHTML = `${score}`;
+	}
+}
+
 // Control the figure
 document.addEventListener('keydown', onKeyDown);
 
@@ -209,8 +239,9 @@ function onKeyDown(event) {
 		case 'ArrowRight':
 			moveTetrominoRight();
 			break;
+		default:
+			return;
 	}
-	draw();
 }
 
 // Move down
@@ -220,6 +251,25 @@ function moveTetrominoDown() {
 		tetromino.row -= 1;
 		placeTetromino();
 	}
+	//ДЗ №2 4
+	draw();
+	stopLoop();
+	srartLoop();
+}
+
+//ДЗ №2 4
+// Auto move down
+function srartLoop() {
+	timeOutId = setTimeout(
+		() => (requestId = requestAnimationFrame(moveTetrominoDown)),
+		700
+	);
+}
+
+//ДЗ №2 4
+function stopLoop() {
+	cancelAnimationFrame(requestId);
+	clearTimeout(timeOutId);
 }
 
 // Rotate figure
@@ -230,6 +280,7 @@ function rotateTetromino() {
 	if (isValid()) {
 		tetromino.matrix = oldMatrix;
 	}
+	draw();
 }
 
 // TODO rotate I,S and Z other way
@@ -252,6 +303,7 @@ function moveTetrominoLeft() {
 	if (isValid()) {
 		tetromino.column += 1;
 	}
+	draw();
 }
 
 // Move right
@@ -260,6 +312,7 @@ function moveTetrominoRight() {
 	if (isValid()) {
 		tetromino.column -= 1;
 	}
+	draw();
 }
 
 // Restricting movement the figure on the field and collision
@@ -292,5 +345,5 @@ function isOutsideOfGameBoard(row, column) {
 
 // Restricting colision
 function hasColisions(row, column) {
-	return playfield[tetromino.row + row][tetromino.column + column];
+	return playfield[tetromino.row + row]?.[tetromino.column + column];
 }
