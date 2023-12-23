@@ -85,6 +85,7 @@ function generateTetromino() {
 generatePlayField();
 generateTetromino();
 
+// Get the div's
 const cells = document.querySelectorAll('.tetris div');
 
 // Draw the figure after the figure reaches the bottom
@@ -101,6 +102,11 @@ function drawPlayfield() {
 			}
 		}
 	}
+}
+
+// Position of the figure
+function convertPositionToIndex(row, column) {
+	return row * PLAYFIELD_COLUMNS + column;
 }
 
 // Draw the figure
@@ -122,11 +128,6 @@ function drawTetromino() {
 	}
 }
 
-// Position of the figure
-function convertPositionToIndex(row, column) {
-	return row * PLAYFIELD_COLUMNS + column;
-}
-
 drawTetromino();
 
 // Draw the new position for the figure
@@ -136,11 +137,60 @@ function draw() {
 	});
 	drawPlayfield();
 	drawTetromino();
+	// console.table(playfield);
 }
 
-document.addEventListener('keydown', onKeyDown);
+// Place figure down
+function placeTetromino() {
+	const matrixSize = tetromino.matrix.length;
+	for (let row = 0; row < matrixSize; row++) {
+		for (let column = 0; column < matrixSize; column++) {
+			if (!tetromino.matrix[row][column]) continue;
+			playfield[tetromino.row + row][tetromino.column + column] =
+				tetromino.name;
+		}
+	}
+	const filledRows = findFilledRows();
+	// console.log(filledRows);
+	removeFilledRows(filledRows);
+	generateTetromino();
+}
+
+// Delete filler rows
+function removeFilledRows(filledRows) {
+	filledRows.forEach(row => {
+		dropRowsAbove(row);
+	});
+}
+
+function dropRowsAbove(rowToDelete) {
+	for (let row = rowToDelete; row > 0; row--) {
+		playfield[row] = playfield[row - 1];
+	}
+	// Add new column after delete
+	playfield[0] = new Array(PLAYFIELD_COLUMNS).fill(0);
+}
+
+// Find filler rows
+function findFilledRows() {
+	const filledRows = [];
+	for (let row = 0; row < PLAYFIELD_ROWS; row++) {
+		let filledColumns = 0;
+		for (let column = 0; column < PLAYFIELD_COLUMNS; column++) {
+			if (playfield[row][column] != 0) {
+				filledColumns++;
+			}
+		}
+		if (PLAYFIELD_COLUMNS == filledColumns) {
+			filledRows.push(row);
+		}
+	}
+	return filledRows;
+}
 
 // Control the figure
+document.addEventListener('keydown', onKeyDown);
+
 function onKeyDown(event) {
 	switch (event.key) {
 		case 'ArrowDown':
@@ -163,6 +213,7 @@ function onKeyDown(event) {
 	draw();
 }
 
+// Move down
 function moveTetrominoDown() {
 	tetromino.row += 1;
 	if (isValid()) {
@@ -171,6 +222,31 @@ function moveTetrominoDown() {
 	}
 }
 
+// Rotate figure
+function rotateTetromino() {
+	const oldMatrix = tetromino.matrix;
+	const rotatedMatrix = rotateMatrix(tetromino.matrix);
+	tetromino.matrix = rotatedMatrix;
+	if (isValid()) {
+		tetromino.matrix = oldMatrix;
+	}
+}
+
+// TODO rotate I,S and Z other way
+function rotateMatrix(matrix) {
+	const N = matrix.length;
+	const rotatedMatrix = [];
+	for (let i = 0; i < N; i++) {
+		rotatedMatrix[i] = [];
+		for (let j = 0; j < N; j++) {
+			rotatedMatrix[i][j] = matrix[N - j - 1][i];
+			// rotatedMatrix[i][j] = matrix[j][matrix[0].length - i - 1];
+		}
+	}
+	return rotatedMatrix;
+}
+
+// Move left
 function moveTetrominoLeft() {
 	tetromino.column -= 1;
 	if (isValid()) {
@@ -178,6 +254,7 @@ function moveTetrominoLeft() {
 	}
 }
 
+// Move right
 function moveTetrominoRight() {
 	tetromino.column += 1;
 	if (isValid()) {
@@ -216,74 +293,4 @@ function isOutsideOfGameBoard(row, column) {
 // Restricting colision
 function hasColisions(row, column) {
 	return playfield[tetromino.row + row][tetromino.column + column];
-}
-
-// Place figure down
-function placeTetromino() {
-	const matrixSize = tetromino.matrix.length;
-	for (let row = 0; row < matrixSize; row++) {
-		for (let column = 0; column < matrixSize; column++) {
-			if (!tetromino.matrix[row][column]) continue;
-			playfield[tetromino.row + row][tetromino.column + column] =
-				tetromino.name;
-		}
-	}
-	const filledRows = findFilledRows();
-	console.log(filledRows);
-	removeFilledRows(filledRows);
-	generateTetromino();
-}
-
-function removeFilledRows(filledRows) {
-	filledRows.forEach(row => {
-		dropRowsAbove(row);
-	});
-}
-
-// Delete filler rows
-function dropRowsAbove(rowToDelete) {
-	for (let row = rowToDelete; row > 0; row--) {
-		playfield[row] = playfield[row - 1];
-	}
-	// Add new column after delete
-	playfield[0] = new Array(PLAYFIELD_COLUMNS).fill(0);
-}
-
-function findFilledRows() {
-	const filledRows = [];
-	for (let row = 0; row < PLAYFIELD_ROWS; row++) {
-		let filledColumns = 0;
-		for (let column = 0; column < PLAYFIELD_COLUMNS; column++) {
-			if (playfield[row][column] != 0) {
-				filledColumns++;
-			}
-		}
-		if (PLAYFIELD_COLUMNS == filledColumns) {
-			filledRows.push(row);
-		}
-	}
-	return filledRows;
-}
-
-// Rotate figure
-function rotateTetromino() {
-	const oldMatrix = tetromino.matrix;
-	const rotatedMatrix = rotateMatrix(tetromino.matrix);
-	tetromino.matrix = rotatedMatrix;
-	if (isValid()) {
-		tetromino.matrix = oldMatrix;
-	}
-}
-
-// TODO rotate I,S and Z other way
-function rotateMatrix(matrix) {
-	const N = matrix.length;
-	const rotatedMatrix = [];
-	for (let i = 0; i < N; i++) {
-		rotatedMatrix[i] = [];
-		for (let j = 0; j < N; j++) {
-			rotatedMatrix[i][j] = matrix[N - j - 1][i];
-		}
-	}
-	return rotatedMatrix;
 }
