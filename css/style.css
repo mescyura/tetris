@@ -11,6 +11,11 @@ body {
 	align-items: center;
 }
 
+.container {
+	display: flex;
+	gap: 50px;
+}
+
 .tetris {
 	background-color: rgb(26, 15, 55);
 	padding: 0.5vh;
@@ -28,27 +33,37 @@ body {
 	box-shadow: inset 2px 2px 2px rgba(113, 112, 112, 0.291);
 }
 
-/* TODO */
-.game-over{
-	position: fixed;
-	background-color: rgba(14, 11, 11, 0.5);
-	width: 100%;
-	height: 100%;
-	display: none;
-	align-items: center;
-	justify-content: center;
+.data{
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	font-family: 'Montserrat', sans-serif;
 }
 
+.score {
+	font-weight: 500;
+}
 
-/* TODO */
-.restart{
+.highScore {
+	font-weight: 300;
+}
+
+.restart {
+	display: block;
 	padding: 10px;
 	border: none;
 	border-radius: 10px;
 	background-color: rgba(32, 185, 65, 0.818);
 	color: white;
 	cursor: pointer;
-	/* font-family: Arial; */
+}
+
+.restart:hover {
+	background-color: rgba(31, 145, 56, 0.818);	
+}
+
+#game-over-text {
+	color: rgba(215, 44, 44, 0.91);
 }
 
 div.O,

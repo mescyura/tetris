@@ -5,16 +5,19 @@ import {
 	TETROMINOES,
 	getRandomFigure,
 	rotateMatrix,
+	setHighScore,
 } from './utilities.js';
 
 import { onKeyDown, stopLoop } from './main.js';
 
 export let playfield;
 export let tetromino;
-export let score;
+export let nextFigurePlayfield;
+export let nextTetromino;
+export let score = 0;
+export let speed = 700;
+export let speedDispday = 0;
 export let isGameOver = false;
-
-let gameOverBlock = document.querySelector('.game-over');
 
 // Setters
 export function setScore(value) {
@@ -23,6 +26,14 @@ export function setScore(value) {
 
 export function setGameOver(value) {
 	isGameOver = value;
+}
+
+export function setDefaultSpeed() {
+	speed = 700;
+}
+
+export function setDefaultDisplaySpeed() {
+	speedDispday = 0;
 }
 
 // Create field
@@ -191,6 +202,9 @@ function dropRowsAbove(rowToDelete) {
 	for (let row = rowToDelete; row > 0; row--) {
 		playfield[row] = playfield[row - 1];
 	}
+	// add speed after each deleted column
+	speed = Math.floor(speed * 0.97);
+	document.getElementById('speed').innerHTML = ++speedDispday;
 	// Add new column after delete
 	playfield[0] = new Array(PLAYFIELD_COLUMNS).fill(0);
 }
@@ -219,8 +233,8 @@ export function scoreCount(filledRows) {
 
 // Game Over
 export function gameOver() {
-	console.log('game over');
+	document.getElementById('game-over-text').innerHTML = 'Game over';
+	setHighScore(score);
 	stopLoop();
-	gameOverBlock.style.display = 'flex';
 	document.removeEventListener('keydown', onKeyDown);
 }

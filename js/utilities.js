@@ -53,7 +53,6 @@ export const TETROMINOES = {
 export function getRandomFigure(array) {
 	let randonIndex = Math.floor(Math.random() * TETROMINO_NAMES.length);
 	return array[randonIndex];
-	
 }
 
 // Find position of figure
@@ -73,4 +72,12 @@ export function rotateMatrix(matrix) {
 		}
 	}
 	return rotatedMatrix;
+}
+
+export function setHighScore(score) {
+	if (score > +localStorage.getItem('highScore')) {
+		localStorage.setItem('highScore', score);
+		document.getElementById('highScore').innerHTML =
+			localStorage.getItem('highScore');
+	}
 }

@@ -1,18 +1,17 @@
 import {
 	PLAYFIELD_COLUMNS,
 	PLAYFIELD_ROWS,
-	TETROMINO_NAMES,
-	TETROMINOES,
 	convertPositionToIndex,
 } from './utilities.js';
 
 import {
 	playfield,
 	tetromino,
-	score,
+	speed,
 	isGameOver,
 	setGameOver,
-	setScore,
+	setDefaultDisplaySpeed,
+	setDefaultSpeed,
 	generatePlayField,
 	generateTetromino,
 	moveTetrominoDown,
@@ -20,7 +19,6 @@ import {
 	moveTetrominoLeft,
 	moveTetrominoRight,
 	rotateTetromino,
-	scoreCount,
 	gameOver,
 } from './tetris.js';
 
@@ -33,27 +31,32 @@ let timeOutId;
 let requestId;
 
 const btnRestart = document.querySelector('.restart');
-const gameOverBlock = document.querySelector('.game-over');
-
 
 btnRestart.addEventListener('click', function () {
 	init();
+	btnRestart.blur();
 });
+
+// localStorage.setItem('highScore', score);
 
 init();
 moveDown();
 
 // Start the game
 function init() {
+	setDefaultSpeed();
+	setDefaultDisplaySpeed();
+	document.getElementById('score').innerHTML = 0;
+	document.getElementById('speed').innerHTML = 0;
+	document.getElementById('game-over-text').innerHTML = '';
+	document.getElementById('highScore').innerHTML =
+		localStorage.getItem('highScore');
 	initKeydown();
-	gameOverBlock.style.display = 'none';
 	setGameOver(false);
 	generatePlayField();
 	generateTetromino();
 	startLoop();
 	cells = document.querySelectorAll('.tetris div');
-	setScore(0);
-	scoreCount(null);
 }
 
 // Draw the playfield after every move
@@ -76,7 +79,6 @@ function drawPlayfield() {
 function drawTetromino() {
 	const name = tetromino.name;
 	const tetrominoMatrixSize = tetromino.matrix.length;
-
 	for (let row = 0; row < tetrominoMatrixSize; row++) {
 		for (let column = 0; column < tetrominoMatrixSize; column++) {
 			if (tetromino.matrix[row][column] == 0) {
@@ -177,7 +179,7 @@ function rotate() {
 function startLoop() {
 	timeOutId = setTimeout(
 		() => (requestId = requestAnimationFrame(moveDown)),
-		700
+		speed
 	);
 }
 
