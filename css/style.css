@@ -3,7 +3,7 @@
 }
 
 body {
-	background: linear-gradient(180deg, rgba(235, 235, 235, 0.895), rgb(58, 58, 58));
+	background: rgba(138, 134, 134, 0.593);
 	height: 100vh;
 	user-select: none;
 	display: flex;
@@ -26,6 +26,29 @@ body {
 	background-color: rgb(24, 31, 62);
 	border-radius: 0.3vh;
 	box-shadow: inset 2px 2px 2px rgba(113, 112, 112, 0.291);
+}
+
+/* TODO */
+.game-over{
+	position: fixed;
+	background-color: rgba(14, 11, 11, 0.5);
+	width: 100%;
+	height: 100%;
+	display: none;
+	align-items: center;
+	justify-content: center;
+}
+
+
+/* TODO */
+.restart{
+	padding: 10px;
+	border: none;
+	border-radius: 10px;
+	background-color: rgba(32, 185, 65, 0.818);
+	color: white;
+	cursor: pointer;
+	/* font-family: Arial; */
 }
 
 div.O,
