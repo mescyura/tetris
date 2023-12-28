@@ -7,8 +7,10 @@ import {
 import {
 	playfield,
 	tetromino,
+	score,
 	speed,
 	isGameOver,
+	setScore,
 	setGameOver,
 	setDefaultDisplaySpeed,
 	setDefaultSpeed,
@@ -44,6 +46,7 @@ moveDown();
 
 // Start the game
 function init() {
+	setScore(0);
 	setDefaultSpeed();
 	setDefaultDisplaySpeed();
 	document.getElementById('score').innerHTML = 0;
